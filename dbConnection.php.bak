@@ -1,0 +1,21 @@
+<?php
+//database connection
+$db_name="cleanware";
+$username="root";
+$password="";
+$servername="localhost";
+
+/*
+define('DB_SERVER', 'sql304.epizy.com');
+define('DB_USERNAME', 'epiz_30794725');
+define('DB_PASSWORD', '7ddcNzuhI5cE');
+define('DB_NAME', 'epiz_30794725_cleanware');
+*/
+
+//connection
+$conn=mysqli_connect($servername,$username,$password,$db_name);
+
+if($conn === false){
+    die("ERROR: Could not connect. " . mysqli_connect_error());
+}
+?>
