@@ -1,4 +1,3 @@
-
 <?php
 //#C1eAn^waRe
 session_start();
@@ -130,24 +129,22 @@ body
 <img src="images/slogo.png" style="width:98%;">
 </a>
 </div>
-   
    <br>
-
-   
-   <a href="" class="dash"><i class="fa fa-dashboard"></i>&nbsp Dashboard</a>
-   <a href="banner.php" ><i class="fa fa-list-alt"></i>&nbsp&nbsp Banner</a>
+   <a href="index.php" ><i class="fa fa-dashboard" ></i>&nbsp&nbsp Dashboard</a>
+   <a href="" class="dash"><i class="fa fa-list-alt"></i>&nbsp&nbsp Banner</a>
    <a href="product.php"><i class="fa fa-user"></i>&nbsp&nbsp&nbsp Product</a>
-
 </div>
 
 <div class="navbar" style="height:50px;padding-top:0px;">
 <div class="box">
     <a href="logout.php">
     <i class="fa fa-sign-out"></i>
-  </div> 
+</div> 
 </div>
 
-</div>
+
+
+
 
 </body>
 
