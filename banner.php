@@ -8,20 +8,36 @@ if($_SESSION['status']!="Active")
 {
     header("location:login.php");
 }
+//connection
+require_once "dbConnection.php";
 
- if(isset($_POST['add']))
+	if(isset($_POST['add']))
     {  
+        $desc  = $_POST['desc'];
 
-        $name  = $_POST['fname'];
-	
-        $sql = "INSERT INTO product(p_name) VALUES ('$name')";
-        if (mysqli_query($con, $sql))
-        {
+		$bimg=basename( $_FILES["bimg"]["name"],".png"); 
+		
+		
+		$target_dir = "images/";
+		$target_file = $target_dir . basename($_FILES["bimg"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+		move_uploaded_file($_FILES["bimg"]["tmp_name"], $target_file);
+			
+        $sql = "INSERT INTO banner (banner_img,banner_desc)
+        VALUES ('$bimg','$desc')";
+        if (mysqli_query($conn, $sql))
+        {	
+	 
+		header("location:banner.php");	
         }
         else
         {
-        echo "Error: " . $sql . " " . mysqli_error($con);
+        echo "Error: " . $sql . " " . mysqli_error($conn);
         }
+		
+		
+		
 	}
 
 ?>
@@ -31,121 +47,139 @@ if($_SESSION['status']!="Active")
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Cleanware Dashboard</title>
+<title>Cleanware</title>
+<link rel="shortcut icon" type="image/png" href="images/logo.png"/>
+<link rel="stylesheet" href=
+"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+<!--jQuery library file -->
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js">
+</script>
+
+<!--Datatable plugin JS library file -->
+<script type="text/javascript" src=
+"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+</script>
+
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 </head>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-	<link rel="shortcut icon" type="image/png" href="images/logo.png"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 <style>
-body 
-{
-	font-family: "Times New Roman", Times, serif;
-	background-color: #F5F5F5;
-}
-
-.sidenav {
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
+.home-section{
+  position: relative;
+  background: #E4E9F7;
+  min-height: 100vh;
   top: 0;
-  left: 0;
-  background-color: white;
-  overflow-x: hidden;
-  padding-top: 20px;
-  
+  left: 78px;
+  width: calc(100% - 78px);
+  transition: all 0.5s ease;
+  z-index: 2;
+}
+.sidebar.open ~ .home-section{
+  left: 250px;
+  width: calc(100% - 250px);
+}
+.home-section .text{
+  display: inline-block;
+  color: #11101d;
+  font-size: 25px;
+  font-weight: 500;
+  margin: 18px
+}
+.ht{
+	margin-left:18px;
+	position:relative;
+	margin-top:-10px;
+}
+.bt{
+	display:inline;
+	margin-left:330px;
+	top:50px;
+}
+.al{
+	text-align:center;
+	display:inline;
 }
 
-.sidenav a {
-  padding: 6px 6px 6px 32px;
-  text-decoration: none;
-  font-size: 20px;
-  color: #818181;
-  display: block;
-}
-
-.sidenav a:hover {
-  color: #111;
-  display:block;
-  background-color:white;
-  
-}
-.fit{
-	margin-left:-20px;
-	margin-top:-15px;
-}
-
-
-.dash{
-	background-color:#F5F5F5;
-	pointer-events: none;
-	cursor: default;
-	font-weight: bold;
-	
-	border-left: 1px solid blue;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
-}
-
-
-@media screen and (max-height: 350px) {
-  .sidenav {padding-top: 15px;}
-  .sidenav a {font-size: 18px;}
-}
-
-.navbar {
-  overflow: hidden;
-  background-color: #333;
-}
-
-.navbar a {
-  float: left;
-  font-size: 16px;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-.navbar a:hover{
-  background-color: grey;
-}
-
-.box{
-	margin-left:1260px;
-}
-  </style>
+</style>
  </head>
  <body>
 
+<?php include 'sidenav.php'; ?>
 
+<section class="home-section">
+    <div class="text">Banner</div>
+	<br>
+	<div class="ht">
+	<div class="al">
+	<i class='bx bx-alarm-exclamation' style="color:red;"> Drag and drop table's column to change the position of the banner to be displayed</i>
+	</div>
+    <div class="bt"> 
+	<a href="#add" data-toggle="modal"data-backdrop="static" data-keyboard="false">
+	<i class='bx bx-image-add bx-md' style="color:#4169E1"></i><span>Add Banner</span>
+	</a>
+	
+	</div>
+	</div>
+	
 
- <div class="sidenav">
- <div class="fit">
- <a href="index.php"><div class="btn2" ></div>
-<img src="images/slogo.png" style="width:98%;">
-</a>
-</div>
-   <br>
-   <a href="index.php" ><i class="fa fa-dashboard" ></i>&nbsp&nbsp Dashboard</a>
-   <a href="" class="dash"><i class="fa fa-list-alt"></i>&nbsp&nbsp Banner</a>
-   <a href="product.php"><i class="fa fa-user"></i>&nbsp&nbsp&nbsp Product</a>
-</div>
+	
 
-<div class="navbar" style="height:50px;padding-top:0px;">
-<div class="box">
-    <a href="logout.php">
-    <i class="fa fa-sign-out"></i>
-</div> 
-</div>
+	
+	
+	
+</section>
+ <div id="add" class="modal fade">
+  <div class="modal-dialog">
+   <div class="modal-content" style="width:535px">
+    <form method="post" action="banner.php" enctype="multipart/form-data">
+     <div class="modal-header">      
+      <h4 class="modal-title">Add New Banner
+      <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">&times;</button>
 
+	  </h4>
+     </div>
+     <div class="modal-body"> 
+	  <div class="form-group">
+	  <label style="font-weight:bold;font-size:16px";>Banner<span style="color:red;font-size:11px;"> *Click the image to preview full size image</span></label><br>
+	    
+	 <img id="preimg2" onclick="op()" width="500px" height="150px"><br><br>
+	 
+      <input type="file" name="bimg" onchange="document.getElementById('preimg2').src = window.URL.createObjectURL(this.files[0])" required>
 
-
-
-
+	 <script>
+	 function op(){
+		 var img=document.getElementById("preimg2");
+		 window.open(img.src,"_blank");
+     
+	 }
+	 </script>
+      </div><br>
+	  
+	 
+	   <div class="form-group">
+       <label style="font-weight:bold;font-size:16px">Banner Description</label>
+       <input type="text" style="width:500px" class="form-control" name="desc" placeholder="Enter banner description" required>
+      </div>
+     </div>
+     <div class="modal-footer">
+      <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+      <input type="submit" class="btn btn-success" name="add" value="Add">
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
 </body>
+<script>
+$('#add').on('hidden.bs.modal', function () {
+    $(this).find('form')[0].reset();
+	$('#preimg2').removeAttr('src');  
+})
+</script>
 
 </html>

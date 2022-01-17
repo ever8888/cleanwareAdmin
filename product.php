@@ -1,4 +1,3 @@
-
 <?php
 //#C1eAn^waRe
 session_start();
@@ -10,8 +9,7 @@ if($_SESSION['status']!="Active")
     header("location:login.php");
 }
 
-//connection
-require_once "dbConnection.php";
+
 ?>
 
 
@@ -45,14 +43,16 @@ require_once "dbConnection.php";
   margin: 18px
 }
 </style>
+ </head>
+ <body>
 
-<body>
-
-<?php include 'sidenav.php';?>
+<?php include 'sidenav.php'; ?>
 
   <section class="home-section">
-      <div class="text">Dashboard</div>
+      <div class="text">Product</div>
   </section>
+
+
 
 </body>
 
