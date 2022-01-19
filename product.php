@@ -20,6 +20,20 @@ if($_SESSION['status']!="Active")
 <title>Cleanware</title>
 </head>
 <link rel="shortcut icon" type="image/png" href="images/logo.png"/>
+
+<link rel="stylesheet" href=
+"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+<!--jQuery library file -->
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js">
+</script>
+
+<!--Datatable plugin JS library file -->
+<script type="text/javascript" src=
+"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+</script>
+
 <style>
 .home-section{
   position: relative;
@@ -55,5 +69,13 @@ if($_SESSION['status']!="Active")
 
 
 </body>
-
+<script>
+$(document).ready(function() {
+    $('#tablelist').DataTable();
+} );
+$('#tablelist').DataTable({
+    "ordering": false,
+	"searching": false
+});
+</script>
 </html>

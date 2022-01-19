@@ -17,7 +17,7 @@ if($_SESSION['status']!="Active")
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Cleanware Dashboard</title>
+<title>Cleanware</title>
 </head>
 <link rel="shortcut icon" type="image/png" href="images/logo.png"/>
 <style>
@@ -55,5 +55,13 @@ if($_SESSION['status']!="Active")
 
 
 </body>
-
+<script>
+$(document).ready(function() {
+    $('#tablelist').DataTable();
+} );
+$('#tablelist').DataTable({
+    "ordering": false,
+	"searching": false
+});
+</script>
 </html>

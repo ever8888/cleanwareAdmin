@@ -11,6 +11,12 @@ if($_SESSION['status']!="Active")
 //connection
 require_once "dbConnection.php";
 
+$select="Select * from banner Order By pos";
+$result=  mysqli_query($conn, $select);
+$count=  mysqli_num_rows($result);
+
+
+
 	if(isset($_POST['add']))
     {  
         $desc  = $_POST['desc'];
@@ -28,8 +34,11 @@ require_once "dbConnection.php";
         VALUES ('$bimg','$desc')";
         if (mysqli_query($conn, $sql))
         {	
-	 
-		header("location:banner.php");	
+
+		echo "<script>
+		alert('Successfully added to database');
+		window.location.href='banner.php';
+		</script>";
         }
         else
         {
@@ -49,23 +58,15 @@ require_once "dbConnection.php";
 <meta charset="UTF-8">
 <title>Cleanware</title>
 <link rel="shortcut icon" type="image/png" href="images/logo.png"/>
-<link rel="stylesheet" href=
-"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
 
-<!--jQuery library file -->
 <script type="text/javascript"
 	src="https://code.jquery.com/jquery-3.5.1.js">
 </script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-<!--Datatable plugin JS library file -->
-<script type="text/javascript" src=
-"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
-</script>
-
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </head>
 
 <style>
@@ -88,21 +89,43 @@ require_once "dbConnection.php";
   color: #11101d;
   font-size: 25px;
   font-weight: 500;
-  margin: 18px
+  margin: 18px;
 }
 .ht{
 	margin-left:18px;
 	position:relative;
 	margin-top:-10px;
+	
 }
 .bt{
 	display:inline;
-	margin-left:330px;
+	margin-left:415px;
 	top:50px;
 }
 .al{
 	text-align:center;
 	display:inline;
+
+}
+
+#tablelist{
+	width:1050px;
+	margin-left:18px;
+	font-size:13px;
+	margin-top:20px;
+	background-color:#E0E0E0;
+}
+
+.dot {
+  height: 20px;
+  width: 20px;
+  background-color: #bbb;
+  color:red;
+  border-radius: 50%;
+  display: inline-block;
+}
+.modal-backdrop {
+  z-index: -1;
 }
 
 </style>
@@ -126,13 +149,42 @@ require_once "dbConnection.php";
 	</div>
 	</div>
 	
-
-	
-
-	
-	
-	
+<table class="table table-bordered table-striped" id="tablelist">
+    <thead>
+        <tr>
+            <th>Banner &nbsp&nbsp<button class="dot" title="Click the image to preview full size image">?</button></th><th>Description</th><th>Date Added</th><th>Edit</th><th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        if($count<1){}else
+        {
+            foreach ($result as $row) {
+                ?>
+					<tr id="<?php echo $row['banner_id']; ?>">
+                    <td><img src="<?php echo 'images/'.$row["banner_img"]; ?>" onclick="op2(this.id)" id="<?php echo 'images/'.$row["banner_img"]; ?>" style="width:150px;height:80px;cursor:pointer;"></td>
+                    <td><?php echo $row["banner_desc"]; ?></td>
+                    <td><?php echo $row["date_added"]; ?></td>
+					
+					<div class="et">
+					<td><a href="#edit<?php echo $row['banner_id'];?>" data-backdrop="static"  data-toggle="modal" data-keyboard="false"><i class='bx bxs-edit bx-md'></i></a>
+			    
+					<?php include('bannerEdit.php'); ?>	
+					</td>	
+					
+					<td><a href='bannerDelete.php?id=<?php echo $row["banner_id"]; ?>' ><i class='bx bx-no-entry bx-md'></i></a></td>
+					<input type="hidden" value="<?php echo $row["banner_id"]; ?>" id="item" name="item">	
+                     	
+                </tr>
+                <?php 
+            }
+        }
+        ?>
+    </tbody>
+</table>
 </section>
+	
+  
  <div id="add" class="modal fade">
   <div class="modal-dialog">
    <div class="modal-content" style="width:535px">
@@ -149,13 +201,12 @@ require_once "dbConnection.php";
 	    
 	 <img id="preimg2" onclick="op()" width="500px" height="150px"><br><br>
 	 
-      <input type="file" name="bimg" onchange="document.getElementById('preimg2').src = window.URL.createObjectURL(this.files[0])" required>
+     <input type="file" name="bimg" onchange="document.getElementById('preimg2').src = window.URL.createObjectURL(this.files[0])" required>
 
 	 <script>
 	 function op(){
 		 var img=document.getElementById("preimg2");
 		 window.open(img.src,"_blank");
-     
 	 }
 	 </script>
       </div><br>
@@ -175,11 +226,32 @@ require_once "dbConnection.php";
   </div>
  </div>
 </body>
+
+	
 <script>
 $('#add').on('hidden.bs.modal', function () {
     $(this).find('form')[0].reset();
 	$('#preimg2').removeAttr('src');  
 })
+</script>
+
+<script>
+  var $sortable = $( "#tablelist > tbody" );
+  $sortable.sortable({
+      stop: function ( event, ui ) {
+          var parameters = $sortable.sortable( "toArray" );
+          $.post("bannerpos.php",{value:parameters},function(result){
+              alert(result);
+          });
+      }
+  });
+</script>
+
+<script>
+    function op2(img){
+	//var img=document.getElementById("pre");
+	window.open(img,"_blank");
+	}
 </script>
 
 </html>
