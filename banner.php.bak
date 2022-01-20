@@ -21,7 +21,7 @@ $count=  mysqli_num_rows($result);
     {  
         $desc  = $_POST['desc'];
 
-		$bimg=basename( $_FILES["bimg"]["name"],".png"); 
+		$bimg=basename( $_FILES["bimg"]["name"]); 
 		
 		
 		$target_dir = "images/";
@@ -44,9 +44,6 @@ $count=  mysqli_num_rows($result);
         {
         echo "Error: " . $sql . " " . mysqli_error($conn);
         }
-		
-		
-		
 	}
 
 ?>
@@ -168,16 +165,17 @@ $count=  mysqli_num_rows($result);
 					
 					<div class="et">
 					<td><a href="#edit<?php echo $row['banner_id'];?>" data-backdrop="static"  data-toggle="modal" data-keyboard="false"><i class='bx bxs-edit bx-md'></i></a>
-			    
-					<?php include('bannerEdit.php'); ?>	
 					</td>	
 					
 					<td><a href='bannerDelete.php?id=<?php echo $row["banner_id"]; ?>' ><i class='bx bx-no-entry bx-md'></i></a></td>
 					<input type="hidden" value="<?php echo $row["banner_id"]; ?>" id="item" name="item">	
                      	
                 </tr>
+				
                 <?php 
+					include('bannerEdit.php'); 
             }
+		
         }
         ?>
     </tbody>
@@ -225,6 +223,9 @@ $count=  mysqli_num_rows($result);
    </div>
   </div>
  </div>
+ 
+ 
+ 
 </body>
 
 	
@@ -251,7 +252,6 @@ $('#add').on('hidden.bs.modal', function () {
     function op2(img){
 	//var img=document.getElementById("pre");
 	window.open(img,"_blank");
-	alert(img);
 	}
 </script>
 

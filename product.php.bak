@@ -8,7 +8,8 @@ if($_SESSION['status']!="Active")
 {
     header("location:login.php");
 }
-
+//connection
+require_once "dbConnection.php";
 
 ?>
 
@@ -20,6 +21,20 @@ if($_SESSION['status']!="Active")
 <title>Cleanware</title>
 </head>
 <link rel="shortcut icon" type="image/png" href="images/logo.png"/>
+
+<link rel="stylesheet" href=
+"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+
+<!--jQuery library file -->
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.5.1.js">
+</script>
+
+<!--Datatable plugin JS library file -->
+<script type="text/javascript" src=
+"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js">
+</script>
+
 <style>
 .home-section{
   position: relative;
@@ -40,8 +55,27 @@ if($_SESSION['status']!="Active")
   color: #11101d;
   font-size: 25px;
   font-weight: 500;
-  margin: 18px
+  margin: 18px;
 }
+
+.ht{
+	margin-left:18px;
+	position:relative;
+	margin-top:-10px;
+	
+}
+.bt{
+	display:inline;
+	margin-left:415px;
+	top:50px;
+}
+.al{
+	text-align:center;
+	display:inline;
+
+}
+
+
 </style>
  </head>
  <body>
@@ -50,6 +84,19 @@ if($_SESSION['status']!="Active")
 
   <section class="home-section">
       <div class="text">Product</div>
+	  <div class="ht">
+	<div class="al">
+	<i class='bx bx-alarm-exclamation' style="color:red;"> Drag and drop table's column to change the position of the banner to be displayed</i>
+	</div>
+    <div class="bt"> 
+	<a href="#add" data-toggle="modal"data-backdrop="static" data-keyboard="false">
+	<i class='bx bx-image-add bx-md' style="color:#4169E1"></i><span>Add Product</span>
+	</a>
+	
+	</div>
+	</div>
+	  
+	     
   </section>
 
 
