@@ -225,7 +225,8 @@ $count=  mysqli_num_rows($result);
  </div>
 </body>
 
-	
+
+
 <script>
 $('#add').on('hidden.bs.modal', function () {
     $(this).find('form')[0].reset();
