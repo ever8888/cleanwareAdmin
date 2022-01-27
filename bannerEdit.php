@@ -47,12 +47,10 @@ $erow=$edit->fetch_assoc();
 
     </form>
 	  <script>
-$('#edit'+<?php echo $row['banner_id']; ?>).on('hidden.bs.modal', function () {
-    $(this).find('form')[0].reset();
+		$('#edit'+<?php echo $row['banner_id']; ?>).on('hidden.bs.modal', function () {
+			$(this).find('form')[0].reset();
 
-
-
-})
+		})
 </script>
    </div>
   </div>

@@ -49,9 +49,7 @@ $erow=$edit->fetch_assoc();
 	  <script>
 $('#edit'+<?php echo $row['banner_id']; ?>).on('hidden.bs.modal', function () {
     $(this).find('form')[0].reset();
-	$('#'+<?php echo $row['banner_id']; ?>).removeAttr('src');  
 
-	document.getElementById("48").src=<?php echo 'images/'+$row['banner_img']; ?>;
 })
 </script>
    </div>

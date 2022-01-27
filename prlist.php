@@ -13,8 +13,40 @@ require_once "dbConnection.php";
 
 
 $id=$_REQUEST['id'];
-
+$id2=$_REQUEST['id2'];
 	
+$select="Select * from prlist Where p_id=$id2 Order By pos ";
+$result=  mysqli_query($conn, $select);
+$count=  mysqli_num_rows($result);	
+	
+	
+	if(isset($_POST['add']))
+    {  
+		$desc  = $_POST['desc'];
+
+		$pimg=basename( $_FILES["pimg"]["name"]); 
+		
+		
+		$target_dir = "images/";
+		$target_file = $target_dir . basename($_FILES["pimg"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+		move_uploaded_file($_FILES["pimg"]["tmp_name"], $target_file);
+			
+        $sql = "INSERT INTO prlist (pr_img,pr_sdesc,p_id,p_name)
+        VALUES ('$pimg','$desc',$id2,'$id')";
+        if (mysqli_query($conn, $sql))
+        {
+		echo "<script>
+		alert('Successfully added to database');
+		window.location.href='prlist.php?id=$id&id2=$id2';
+		</script>";
+        }
+        else
+        {
+        echo "Error: " . $sql . " " . mysqli_error($conn);
+        }
+	}
 ?>
 
 
@@ -75,7 +107,7 @@ $id=$_REQUEST['id'];
 }
 .bt{
 	display:inline;
-	margin-left:405px;
+	margin-left:246px;
 	top:50px;
 }
 .al{
@@ -113,26 +145,96 @@ $id=$_REQUEST['id'];
 <?php include 'sidenav.php'; ?>
 
   <section class="home-section">
-      <div class="text"><a href="product.php">Product ></a> <?php echo $id; ?></div>
-	  <div class="ht">
+      <div class="text"><a href="product.php">Product Image ></a> <?php echo $id; ?></div>
+	 <div class="ht">
 	<div class="al">
-	<i class='bx bx-alarm-exclamation' style="color:red;"> Drag and drop table's column to change the position of the product to be displayed</i>
+	<i class='bx bx-alarm-exclamation' style="color:red;"> Drag and drop table's column to change the position to be displayed (Set to Show All entries before dragging)</i>
 	</div>
     <div class="bt"> 
 	<a href="#add" data-toggle="modal" data-backdrop="static" data-keyboard="false">
-	<i class='bx bxl-product-hunt bx-md' style="color:#4169E1"></i><span>Add Product</span>
+	<i class='bx bx-image-add bx-md' style="color:#4169E1"></i><span>Add Image</span>
 	</a>
-
 	</div>
 	</div>
 
 	<div class="tab">
-
+<table class="table table-bordered table-striped" id="tablelist" >
+    <thead>
+        <tr>
+            <th>Product Image</th><th>Product Short Description</th><th>Edit</th><th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        if($count<1){}else
+        {
+            foreach ($result as $row) {
+                ?>
+					<tr id="<?php echo $row['prlist_id']; ?>">
+                    <td><img src="<?php echo 'images/'.$row["pr_img"]; ?>" onclick="op2(this.id)" id="<?php echo 'images/'.$row["pr_img"]; ?>" style="width:80px;height:80px;cursor:pointer;"></td>
+					<td><?php echo $row["pr_sdesc"]; ?></td>
+					<td><a href="#edit<?php echo $row['prlist_id'];?>" data-backdrop="static"  data-toggle="modal" data-keyboard="false"><i class='bx bxs-edit bx-md'></i></a>
+					</td>	
+					
+					<td><a href='prDelete.php?id=<?php echo $id;?>&id2=<?php echo $id2; ?>&id3=<?php echo $row['prlist_id']; ?>' ><i class='bx bx-no-entry bx-md'></i></a></td>
+					<input type="hidden" value="<?php echo $row["prlist_id"]; ?>" id="item" name="item">	
+                     	
+                </tr>
+				
+                <?php 
+				include('prEdit.php'); 
+            }
+        }
+        ?>
+    </tbody>
+</table>  
 </div>
-	  <br>     
+  
+
+
+<br>	
   </section>
 
+<div id="add" class="modal fade">
+  <div class="modal-dialog">
+   <div class="modal-content" style="width:535px">
+    <form method="post" action="prlist.php?id=<?php echo $id;?>&id2=<?php echo $id2;?>" enctype="multipart/form-data">
+     <div class="modal-header">      
+      <h4 class="modal-title">Add New Product Image
+      <button type="button" class="close" data-dismiss="modal"  aria-hidden="true">&times;</button>
 
+	  </h4>
+     </div>
+     <div class="modal-body"> 
+	  <div class="form-group">
+	  <label style="font-weight:bold;font-size:16px";>Product Image</label><br>
+	    
+	 <img id="preimg" onclick="op()" width="180px" height="180px"><br><br>
+	 
+     <input type="file" name="pimg" onchange="document.getElementById('preimg').src = window.URL.createObjectURL(this.files[0])" required>
+
+	 <script>
+	 function op(){
+		 var img=document.getElementById("preimg");
+		 window.open(img.src,"_blank");
+	 }
+	 </script>
+      </div><br>
+	  
+	  <div class="form-group">
+		<label style="font-weight:bold;font-size:16px">Product Image Short Description</label>
+		<input type="text" id="desc" name="desc"  style="width:500px" class="form-control" maxlength="15"><br><br>
+      </div>  
+	  
+     </div>
+     <div class="modal-footer">
+      <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+      <input type="submit" class="btn btn-success" name="add" value="Add">
+     </div>
+    </form>
+   </div>
+  </div>
+ </div>
 
 
 
@@ -143,7 +245,7 @@ $(document).ready(function() {
 } );
 $('#tablelist').DataTable({
     "ordering": false,
-
+	"lengthMenu": [[4, 25, 50, -1], [4, 25, 50, "All"]]
 });
  
 
@@ -153,7 +255,7 @@ $('#tablelist').DataTable({
   $sortable.sortable({
       stop: function ( event, ui ) {
           var parameters = $sortable.sortable( "toArray" );
-          $.post("productPos.php",{value:parameters},function(result){
+          $.post("prPos.php",{value:parameters},function(result){
               alert(result);
           });
       }

@@ -44,7 +44,7 @@ $erow=$edit->fetch_assoc();
 	  
 	  	   <div class="form-group">
        <label>Product Link</label>
-       <input type="text" style="width:500px" name="desc" id="desc" class="form-control" value="<?php echo $erow['p_link']; ?>" required>
+       <input type="text" style="width:500px" name="link" id="link" class="form-control" value="<?php echo $erow['p_link']; ?>" required>
       </div>
 	  
 	  

@@ -17,7 +17,7 @@ $edit=mysqli_query($conn,"select * from product where p_id=".$row['p_id']);
 $erow=$edit->fetch_assoc();
 ?>
 	<div class="form-group">
-	<label style="font-weight:bold;font-size:16px";>Product<span style="color:red;font-size:11px;"> *Click the image to preview full size image</span></label><br>
+	<label style="font-weight:bold;font-size:16px";>Product</label><br>
    
   <img id="<?php echo $erow['p_id']; ?>" onclick="opq(this.src)" width="180px" height="180px" src="<?php echo 'images/'.$erow['p_img']; ?>"><br><br>
   <input type="file"  name="waimg" onchange="document.getElementById(<?php echo $erow['p_id']; ?>).src = window.URL.createObjectURL(this.files[0])">

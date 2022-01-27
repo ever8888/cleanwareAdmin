@@ -107,7 +107,7 @@ if(isset($_POST['add']))
 }
 .bt{
 	display:inline;
-	margin-left:405px;
+	margin-left:240px;
 	top:50px;
 }
 .al{
@@ -148,7 +148,7 @@ if(isset($_POST['add']))
       <div class="text">Product</div>
 	  <div class="ht">
 	<div class="al">
-	<i class='bx bx-alarm-exclamation' style="color:red;"> Drag and drop table's column to change the position of the product to be displayed</i>
+	<i class='bx bx-alarm-exclamation' style="color:red;"> Drag and drop table's column to change the position to be displayed (Set to Show All entries before dragging)</i>
 	</div>
     <div class="bt"> 
 	<a href="#add" data-toggle="modal" data-backdrop="static" data-keyboard="false">
@@ -173,10 +173,9 @@ if(isset($_POST['add']))
                 ?>
 					<tr id="<?php echo $row['p_id']; ?>">
                     <td><img src="<?php echo 'images/'.$row["p_img"]; ?>" onclick="op2(this.id)" id="<?php echo 'images/'.$row["p_img"]; ?>" style="width:120px;height:120px;cursor:pointer;"></td>
-                    <td><a href="prlist.php?id=<?php echo $row['p_name'];?>"><?php echo $row["p_name"]; ?></a></td>
-                    <td><?php echo $row["p_sdesc"]; ?></td>
+                    <td><a href="prlist.php?id=<?php echo $row['p_name'];?>&id2=<?php echo $row['p_id'];?>"><?php echo $row["p_name"]; ?></a></td>
+                    <td><?php echo nl2br($row["p_sdesc"]); ?><br><a href="prdesc.php?id=<?php echo $row['p_name'];?>&id2=<?php echo $row['p_id'];?>">View for Long Description</a></td>
 					 <td><?php echo $row["p_link"]; ?></td>
-					<div class="et">
 					<td><a href="#edit<?php echo $row['p_id'];?>" data-backdrop="static"  data-toggle="modal" data-keyboard="false"><i class='bx bxs-edit bx-md'></i></a>
 					</td>	
 					
@@ -259,7 +258,7 @@ $(document).ready(function() {
 } );
 $('#tablelist').DataTable({
     "ordering": false,
-
+	"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
 });
  
 
